@@ -1,0 +1,30 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+variables:
+  vmImageName: 'ubuntu-latest'
+  resourceGroupName: '<resource-group-name>'
+  location: '<your-closet-location>'
+  templateFile: './main.bicep'
+  sourceFolder: 'quickstart/microsoft.web/webapp'
+
+trigger:
+- none
+
+pool:
+  vmImage: $(vmImageName)
+
+name: Bicep deploy template
+
+steps:
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: :'<service-connection-name>'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az deplyment group create --resource-group $(resourceGroupName) --template-file $(sourceFolder)$(templateFile) `
+        --parameters administratorLogin=$(administratorLogin) administratorLoginPassword=$(administratorLoginPassword)
+
